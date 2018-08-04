@@ -46,3 +46,19 @@ ml_corr(iris_tbl, columns = features , method = "pearson")
 
 #https://acadgild.com/blog/hadoop-data-analysis-using-sparklyr
 
+
+library(DBI)
+iris_preview <- dbGetQuery(sc, "SELECT * FROM iris_tbl LIMIT 10")
+iris_preview
+
+iris_tbl
+ml_chisquare_test(x, features, label)
+
+iris_tbl <- sdf_copy_to(sc, iris, name = "iris_tbl", overwrite = TRUE)
+
+features <- c("Petal_Width", "Petal_Length", "Sepal_Length", "Sepal_Width")
+
+ml_chisquare_test(iris_tbl, features = features, label = "Species")
+
+barplot(as.matrix(iris))
+

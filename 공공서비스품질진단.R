@@ -417,7 +417,6 @@ Index.Target.Type <- data.frame("주용도" = c("단독주택", "단독주택", 
                                           "공장", "창고시설", "제1종근린생활시설
                                           ", "공장", "공장",
                                           "동.식물관련시설", "동.식물관련시설"),
-                                
                                 "민원상세유형" = c("신축신고", "신축허가", "허가/
                                              신고사항변경-신고", "신축허가", "신축허가",
                                              "신축허가", "허가/신고사항변경-허
@@ -430,25 +429,23 @@ Index.Target.Type$주용도_민원유형 <- paste0(Index.Target.Type$주용도, 
                                      Index.Target.Type$민원상세유형)
 df.Temp <- data.frame()
 for (i in 1:nrow(Index.Target.Type)) {
-  
-  df.Sub <- subset(df.KCP07.Total, df.KCP07.Total$주용도_민원유형 ==
-                     Index.Target.Type[i,3])
-  
+  df.Sub <- subset(df.KCP07.Total, df.KCP07.Total$주용도_민원유형 == Index.Target.Type[i,3])
   df.Temp <- rbind(df.Temp, df.Sub)
 }
 write.csv(df.Temp, "DS_KCP07_17Types.csv", row.names = F, col.names = T)
+
 ###############################################################
 ########## 협의부서 수 파생변수 생성 ##########
 ## 데이터 로드 및 서브셋 생성 ##
 df.KCP02 <- fread("협의원본.csv", header = T, stringsAsFactors = F, data.table = F)
 df.KCP07.17Type <- fread("DS_KCP07_17Types_v2.csv", header = T,
                          stringsAsFactors = F, data.table = F)
-df.KCP07.17Type.sub <- subset(df.KCP07.17Type, df.KCP07.17Type$단순복합 ==
-                                "복합")
+df.KCP07.17Type.sub <- subset(df.KCP07.17Type, df.KCP07.17Type$단순복합 == "복합")
 dt.KCP02 <- as.data.table(df.KCP02)
 setkey(dt.KCP02, 접수_번호)
 dt.Minwon.List <- as.data.table(unique(df.KCP07.17Type.sub$접수번호))
 colnames(dt.Minwon.List) <- "접수_번호"
+
 ##17개 유형에 대한 민원 번호만 집계
 dt.KCP02.v2 <- merge(dt.KCP02, dt.Minwon.List)
 dt.Minwon.Jupsu.Num <- as.data.table(unique(dt.KCP02.v2$접수_번호))
@@ -658,24 +655,21 @@ for (target in 1:nrow(Index.Target.Type)) {
       df.Supplement.by.Year.Agg.2014 <- data.frame("처리년도" =
                                                      df.year.2014$처리년도, "보완수" = df.year.2014$보완수 )
     } else {
-      df.Supplement.by.Year.Agg.2014 <- as.data.frame(aggregate(보완수 ~ 처
-                                                                   리년도, data = df.year.2014, mean))
+      df.Supplement.by.Year.Agg.2014 <- as.data.frame(aggregate(보완수 ~ 처리년도, data = df.year.2014, mean))
     }
     
     if ( nrow(df.year.2015) < 2 ) {
       df.Supplement.by.Year.Agg.2015 <- data.frame("처리년도" =
                                                      df.year.2015$처리년도, "보완수" = df.year.2015$보완수 )
     } else {
-      df.Supplement.by.Year.Agg.2015 <- as.data.frame(aggregate(보완수 ~ 처
-                                                                   리년도, data = df.year.2015, mean))
+      df.Supplement.by.Year.Agg.2015 <- as.data.frame(aggregate(보완수 ~ 처리년도, data = df.year.2015, mean))
     }
     
     if ( nrow(df.year.2016) < 2 ) {
       df.Supplement.by.Year.Agg.2016 <- data.frame("처리년도" =
                                                      df.year.2016$처리년도, "보완수" = df.year.2016$보완수 )
     } else {
-      df.Supplement.by.Year.Agg.2016 <- as.data.frame(aggregate(보완수 ~ 처
-                                                                   리년도, data = df.year.2016, mean))
+      df.Supplement.by.Year.Agg.2016 <- as.data.frame(aggregate(보완수 ~ 처리년도, data = df.year.2016, mean))
     }
     
     
@@ -684,8 +678,7 @@ for (target in 1:nrow(Index.Target.Type)) {
     
     df.Supplement.by.Year <- merge(df.Supplement.by.Year.Tmp,
                                    df.Supplement.by.Year.Agg, all.x = T, by = "처리년도")
-    df.Supplement.by.Year[c("보완수")][is.na(df.Supplement.by.Year[c("보완수")])]
-    <- 0
+    df.Supplement.by.Year[c("보완수")][is.na(df.Supplement.by.Year[c("보완수")])]<- 0
     
     ## 전문성 계산 ##
     if (df.Supplement.by.Year[df.Supplement.by.Year$처리년도 == 2014,2] == 0
@@ -695,10 +688,8 @@ for (target in 1:nrow(Index.Target.Type)) {
       
       Professionality <- 0
       
-    } else if (df.Supplement.by.Year[df.Supplement.by.Year$처리년도 ==
-                                     2014,2] == 0 &
-               df.Supplement.by.Year[df.Supplement.by.Year$처리년도 ==
-                                     2015,2] > 0 ) {
+    } else if (df.Supplement.by.Year[df.Supplement.by.Year$처리년도 == 2014,2] == 0 &
+               df.Supplement.by.Year[df.Supplement.by.Year$처리년도 == 2015,2] > 0 ) {
       
       Professionality <- df.Supplement.by.Year[df.Supplement.by.Year$처리년도 == 2015,2] * 100
       
@@ -712,16 +703,14 @@ for (target in 1:nrow(Index.Target.Type)) {
     ### 사용 변수 : 빠른 협의 요청일, 느린회신일 <- 이미 계산된 필드(회신_협의    빼기)가 있으므로 이 컬럼으로 대체    
     
     
-    if (Complex.Type == "단순" | nrow(df.Minwon.City[!df.Minwon.City$협의수
-                                                   == 0,]) == 0) {
+    if (Complex.Type == "단순" | nrow(df.Minwon.City[!df.Minwon.City$협의수 == 0,]) == 0) {
       
       Cooperate <- NA
       
     } else {
       
       ## 협의유형이 복합/통합(복합이 존재하는) 인 경우
-      df.Minwon.City.2 <- subset(df.Minwon.City, !df.Minwon.City$협의부서수
-                                 == 0)
+      df.Minwon.City.2 <- subset(df.Minwon.City, !df.Minwon.City$협의부서수 == 0)
       Cooperate <- (sum(df.Minwon.City.2$협의처리시간 / df.Minwon.City.2$협의부서수)) / nrow(df.Minwon.City[!df.Minwon.City$협의수 == 0,])
       
     }
@@ -849,4 +838,125 @@ cat(" 2.", Complex.Type, "-", Main.Purpose, "-", Minwon.Type, "-",
   df.Index.Table.City$관리시군구_신뢰성 <- as.numeric(df.Index.Table.City$관리시군구_신뢰성)
   df.Index.Table.City$관리시군구_전문성 <- as.numeric(df.Index.Table.City$관리시군구_전문성)
   df.Index.Table.City$관리시군구_협조성 <- as.numeric(df.Index.Table.City$관리시군구_협조성)
-  df.Index.Table.City$관리시군구_신속성 <- as.numeric(df.Index.Table.City$관리
+  df.Index.Table.City$관리시군구_신속성 <- as.numeric(df.Index.Table.City$관리시군구_신속성)
+  df.Index.Table.City$관리시군구_욕구충족성 <- as.numeric(df.Index.Table.City
+                                                $관리시군구_욕구충족성)
+  df.Index.Table.City$관리시군구_내부품질개선 <-
+    as.numeric(df.Index.Table.City$관리시군구_내부품질개선)
+  df.Index.Table.City$관리시군구_만족도 <- as.numeric(df.Index.Table.City$관리시군구_만족도)
+  
+  ### 지표 평점 소숫점 세자리까지만 표현 ###
+  df.Index.Table.City$관리시군구_응답성 <- round(df.Index.Table.City$관리시군구_응답성, 3)
+  df.Index.Table.City$관리시군구_신뢰성 <-
+    round(as.numeric(df.Index.Table.City$관리시군구_신뢰성),3)
+  df.Index.Table.City$관리시군구_전문성 <-
+    round(as.numeric(df.Index.Table.City$관리시군구_전문성),3)
+  df.Index.Table.City$관리시군구_협조성 <-
+    round(as.numeric(df.Index.Table.City$관리시군구_협조성),3)
+  df.Index.Table.City$관리시군구_신속성 <-
+    round(as.numeric(df.Index.Table.City$관리시군구_신속성),3)
+  df.Index.Table.City$관리시군구_욕구충족성 <-
+    round(as.numeric(df.Index.Table.City$관리시군구_욕구충족성),3)
+  df.Index.Table.City$관리시군구_내부품질개선 <-
+    round(as.numeric(df.Index.Table.City$관리시군구_내부품질개선),3)
+  df.Index.Table.City$관리시군구_만족도 <-
+    round(as.numeric(df.Index.Table.City$관리시군구_만족도),3)
+  
+  ## 최대/최소값 NA 처리를 위한 함수 생성 ##
+  my.max <- function(x) ifelse( !all(is.na(x)), max(x, na.rm=T), NA)
+  my.min <- function(x) ifelse( !all(is.na(x)), min(x, na.rm=T), NA)
+  
+  ### 각 지표별 max/min 컬럼 추가 ###
+  df.Index.Table.City$관리시군구_응답성_최대 <-
+    rep(my.max(df.Index.Table.City$관리시군구_응답성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_신뢰성_최대 <-
+    rep(my.max(df.Index.Table.City$관리시군구_신뢰성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_전문성_최대 <-
+    rep(my.max(df.Index.Table.City$관리시군구_전문성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_협조성_최대 <-
+    rep(my.max(df.Index.Table.City$관리시군구_협조성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_신속성_최대 <-
+    rep(my.max(df.Index.Table.City$관리시군구_신속성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_욕구충족성_최대 <-
+    rep(my.max(df.Index.Table.City$관리시군구_욕구충족성),nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_내부품질개선_최대 <-
+    rep(my.max(df.Index.Table.City$관리시군구_내부품질개선),nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_만족도_최대 <-
+    rep(my.max(df.Index.Table.City$관리시군구_만족도), nrow(df.Index.Table.City))
+  
+  df.Index.Table.City$관리시군구_응답성_최소 <-
+    rep(my.min(df.Index.Table.City$관리시군구_응답성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_신뢰성_최소 <-
+    rep(my.min(df.Index.Table.City$관리시군구_신뢰성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_전문성_최소 <-
+    rep(my.min(df.Index.Table.City$관리시군구_전문성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_협조성_최소 <-
+    rep(my.min(df.Index.Table.City$관리시군구_협조성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_신속성_최소 <-
+    rep(my.min(df.Index.Table.City$관리시군구_신속성), nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_욕구충족성_최소 <-
+    rep(my.min(df.Index.Table.City$관리시군구_욕구충족성),
+            nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_내부품질개선_최소 <-
+    rep(my.min(df.Index.Table.City$관리시군구_내부품질개선),
+            nrow(df.Index.Table.City))
+  df.Index.Table.City$관리시군구_만족도_최소 <-
+    rep(my.min(df.Index.Table.City$관리시군구_만족도), nrow(df.Index.Table.City))
+  
+  ### 역수 처리 ###
+  df.Index.Table.City.Reverse <- df.Index.Table.City
+  df.Index.Table.City.Reverse$관리시군구_응답성_RE <- 1 /
+    (exp(df.Index.Table.City.Reverse$관리시군구_응답성))
+  df.Index.Table.City.Reverse$관리시군구_전문성_RE <- 1 / 
+    (1.01^df.Index.Table.City.Reverse$관리시군구_전문성)
+  df.Index.Table.City.Reverse$관리시군구_협조성_RE <- 1 /
+    (1.01^df.Index.Table.City.Reverse$관리시군구_협조성)
+  
+  ### 지표 평점 백분위 환산 ###
+  df.Index.Table.City$관리시군구_응답성_상대 <-
+    round(((df.Index.Table.City.Reverse$관리시군구_응답성_RE-min(df.Index.Table.City.Reverse$관리시군구_응답성_RE, na.rm = T))/
+             (max(df.Index.Table.City.Reverse$관리시군구_응답성_RE, na.rm = T) -
+                min(df.Index.Table.City.Reverse$관리시군구_응답성_RE, na.rm = T))) * 100,
+          digit = 0)
+  
+  df.Index.Table.City$관리시군구_신뢰성_상대 <- round(((df.Index.Table.City$관리시군구_신뢰성-min(df.Index.Table.City$관리시군구_신뢰성,na.rm = T))/
+                                               (max(df.Index.Table.City$관리시군구_신뢰성,na.rm = T) - min(df.Index.Table.City$관리시군구_신뢰성,na.rm = T))) * 100, digit = 0)
+  
+  df.Index.Table.City$관리시군구_전문성_상대 <-
+    round(((df.Index.Table.City.Reverse$관리시군구_전문성_RE-min(df.Index.Table.City.Reverse$관리시군구_전문성_RE, na.rm = T))/
+             (max(df.Index.Table.City.Reverse$관리시군구_전문성_RE, na.rm = T) -
+                round(min(df.Index.Table.City.Reverse$관리시군구_전문성_RE, na.rm = T), digit
+                      = 0))) * 100, digit = 0)
+  
+  df.Index.Table.City$관리시군구_협조성_상대 <-
+    round(((df.Index.Table.City.Reverse$관리시군구_협조성_RE-min(df.Index.Table.City.Reverse$관리시군구_협조성_RE, na.rm = T))/
+             (max(df.Index.Table.City.Reverse$관리시군구_협조성_RE, na.rm = T) -
+                min(df.Index.Table.City.Reverse$관리시군구_협조성_RE, na.rm = T))) * 100,
+          digit = 0)
+  
+  df.Index.Table.City$관리시군구_신속성_상대 <- round(((df.Index.Table.City$관리시군구_신속성-min(df.Index.Table.City$관리시군구_신속성, na.rm = T))/
+                                               (max(df.Index.Table.City$관리시군구_신속성, na.rm = T) - min(df.Index.Table.City$관리시군구_신속성, na.rm =T))) * 100, digit = 0)
+  
+  df.Index.Table.City$관리시군구_욕구충족성_상대 <-
+    round(((df.Index.Table.City$관리시군구_욕구충족성-min(df.Index.Table.City$관리시군구_욕구충족성, na.rm = T))/
+             (max(df.Index.Table.City$관리시군구_욕구충족성, na.rm = T) - min(df.Index.Table.City$관리시군구_욕구충족성,
+                                              na.rm = T))) * 100, digit = 0)
+  
+  df.Index.Table.City$관리시군구_내부품질개선_상대 <-
+    round(((df.Index.Table.City$관리시군구_내부품질개선-min(df.Index.Table.City$관리시군구_내부품질개선, na.rm = T))/
+             (max(df.Index.Table.City$관리시군구_내부품질개선, na.rm = T) - min(df.Index.Table.City$관리시군구_내부품질개선, na.rm = T))) * 100, digit = 0)
+  
+  df.Index.Table.City$관리시군구_만족도_상대 <- rep("",nrow(df.Index.Table.City))
+  
+  df.Index.Table.City[c("관리시군구_욕구충족성_상대")][is.na(df.Index.Table.City[c("
+                                                                       관리시군구_욕구충족성_상대")])] <- 100
+  
+  colnames(df.Index.Table.City)
+  
+  df.Index.Table.Type.Combine <- rbind(df.Index.Table.Type.Combine,
+                                       df.Index.Table.City)
+} #End for (target in 1:nrow(Index.Target.Type))
+Output.File.Name <- paste0("건축인허가_서비스품질지표평점_관리시군구_",
+                           Complex.Type, ".csv")
+write.csv(df.Index.Table.Type.Combine, file = Output.File.Name, col.names =
+            TRUE, row.names = TRUE)

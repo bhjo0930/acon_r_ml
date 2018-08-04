@@ -35,3 +35,25 @@ library(corrplot)
 gData.cor<-cor(gData[,4:8])
 
 corrplot(gData.cor)
+
+data <- read_csv("cleanDescriptive.csv", locale = locale(encoding = "euc-kr"))
+
+install.packages("gmodels")
+library(gmodels)
+library(ggplot2)
+
+
+x<-data$level2
+y<-data$pass2
+
+result<-data.frame(level=x, pass=y)
+
+?CrossTable(table(result))
+
+
+survey<-MASS::survey
+table(survey$W.Hnd)
+chisq.test(table(survey$W.Hnd),p=c(.3,.7))
+
+
+
