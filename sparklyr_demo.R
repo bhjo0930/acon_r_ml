@@ -1,3 +1,10 @@
+http://blog.daum.net/chohs12
+
+https://github.com/rstudio/cheatsheets
+
+
+
+
 
 install.packages("sparklyr")
 

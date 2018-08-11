@@ -293,3 +293,4 @@ virginica를 versicolor로 예측한 경우가 1건 있었음.
 devtools::install_github("lionel-/vdiffr")
 install.packages("freetypeharfbuzz", type = "source")
 library(freetypeharfbuzz)
+
